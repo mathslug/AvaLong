@@ -16,6 +16,10 @@ limiter = Limiter(
 
 games = {}
 
+@app.route('/')
+def meta_home():
+    return redirect(url_for('home'))
+
 @app.route('/avalom/')
 def home():
     return render_markdown_template('home')
