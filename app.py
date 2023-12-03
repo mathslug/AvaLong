@@ -16,11 +16,11 @@ limiter = Limiter(
 
 games = {}
 
-@app.route('/')
+@app.route('/avalon/')
 def home():
     return render_markdown_template('home')
 
-@app.route('/create_game')
+@app.route('/avalon/create_game')
 def create_game():
     username = request.args.get('username', '').strip()
     num_players = request.args.get('num_players', '').strip()
@@ -48,7 +48,7 @@ def create_game():
     # Redirect to the game page
     return redirect(url_for('game', game_id=game_id))
 
-@app.route('/join_game')
+@app.route('/avalon/join_game')
 def join_game():
     username = request.args.get('username', '').strip()
     game_id = request.args.get('game_id', '').strip()
@@ -77,7 +77,7 @@ def join_game():
     else:
         return redirect(url_for('game', game_id=game_id))
 
-@app.route('/game/<int:game_id>')  # Define the route with a dynamic segment
+@app.route('/avalon/game/<int:game_id>')  # Define the route with a dynamic segment
 def game(game_id):
     game_info = games.get(game_id)
     if not game_info:
