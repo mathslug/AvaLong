@@ -1,7 +1,6 @@
 import random
 
 class AvalonGame:
-
     def __init__(self, players, roles=None):
         if len(players) not in [5, 6, 7, 8, 9, 10]:
             raise ValueError("Must have between 5 and 10 players.")
@@ -24,14 +23,10 @@ class AvalonGame:
             10: [3, 4, 4, 5, 5]
         }[len(players)]
 
-        self.fails_required = {
-            5: [1, 1, 1, 1, 1],
-            6: [1, 1, 1, 1, 1],
-            7: [1, 1, 1, 2, 1],
-            8: [1, 1, 1, 2, 1],
-            9: [1, 1, 1, 2, 1],
-            10: [1, 1, 1, 2, 1]
-        }[len(players)]
+        if len(players) <= 6:
+            self.fails_required = [1, 1, 1, 1, 1]
+        else:
+            self.fails_required = [1, 1, 1, 2, 1]
 
         if roles is None:
             self.characters = {
@@ -58,11 +53,11 @@ class AvalonGame:
         self.proposed_team = []
         self.votes = {}
         self.mission_actions = {}
-        self.assassination_time = False
+        self.mechanic_mode = "proposal"
         self.winner = ""
 
     def get_game_state(self):
-        # Return the current game state information
+        # TODO make this more dynamic based on mechanic_mode, to create a log
         return {
             "current_turn": self.turn_order[self.current_turn],
             "turn order:": self.turn_order,
@@ -70,7 +65,8 @@ class AvalonGame:
             "consecutive_rejects": self.consecutive_rejects,
             "mission_participants": self.mission_participants[len(self.completed_missions)],
             "fails_required": self.fails_required[len(self.completed_missions)],
-            "proposed_team": self.proposed_team
+            "proposed_team": self.proposed_team,
+            "current_mechanic_mode": self.mechanic_mode
         }
 
     def get_player_known_info(self, player_name):
@@ -94,17 +90,11 @@ class AvalonGame:
         return info
     
     def propose_team(self, player_name, team):
-        if self.winner:
-            raise ValueError("This game is already over.")
-        
-        if self.assassination_time:
-            raise ValueError("It is time for assassination.")
+        if not self.mechanic_mode == "proposal":
+            raise ValueError("It is not time for mission proposal.")
         
         if player_name != self.turn_order[self.current_turn]:
             raise ValueError("It is a different player's turn.")
-
-        if self.proposed_team:
-            raise ValueError("A team has already been proposed for this mission.")
 
         if len(team) != self.mission_participants[len(self.completed_missions)]:
             raise ValueError(f"Proposed team must have {self.mission_participants[len(self.completed_missions)]} members.")
@@ -113,22 +103,14 @@ class AvalonGame:
             raise ValueError("All players in the proposed team must be part of the game.")
 
         self.proposed_team = team
+        self.mechanic_mode = "voting"
     
     def player_vote(self, player_name, vote):
-        if self.winner:
-            raise ValueError("This game is already over.")
-        
-        if self.assassination_time:
-            raise ValueError("It is time for assassination.")
-        
+        if not self.mechanic_mode == "voting":
+            raise ValueError("It is not time for voting on the proposed mission.")
+
         if player_name not in self.player_characters:
             raise ValueError("Player is not part of the game.")
-
-        if not self.proposed_team:
-            raise ValueError("No team has been proposed yet.")
-
-        if len(self.votes) == len(self.player_characters):
-            raise ValueError("All players have already voted.")
 
         # Add or update the player's vote
         self.votes[player_name] = vote
@@ -143,26 +125,21 @@ class AvalonGame:
                 self.proposed_team = []
                 self.votes = {}
                 if self.consecutive_rejects == 5:
-                    self.winner = "Evil Team"
+                    self.winner = "evil"
+                    self.mechanic_mode = "ended"
                 else:
                     self.current_turn = (self.current_turn + 1) % len(self.player_characters)
+                    self.mechanic_mode = "proposal"
+            else:
+                self.mechanic_mode = "mission"
 
     def player_mission_act(self, player_name, succeed_mission):
-        if self.winner:
-            raise ValueError("This game is already over.")
-        
-        if self.assassination_time:
-            raise ValueError("It is time for assassination.")
+        if not self.mechanic_mode == "mission":
+            raise ValueError("It is not time to go on a mission.")
 
         if player_name not in self.proposed_team:
-            raise ValueError("Player is not in the proposed team.")
+            raise ValueError("Player is not in the mission team.")
 
-        if len(self.votes) != len(self.player_characters):
-            raise ValueError("All players have not voted yet.")
-
-        if sum(self.votes.values()) <= len(self.player_characters) / 2:
-            raise ValueError("The proposed team was not approved by the majority.")
-        
         if self.player_characters[player_name] in ["Merlin", "Percival", "Knight"] and not succeed_mission:
             raise ValueError("Good team can't sabotage missions.")
 
@@ -182,17 +159,16 @@ class AvalonGame:
             self.mission_actions = {}
 
             if sum([not m for m in self.completed_missions]) >= 3:
-                self.winner = "Evil Team"
+                self.winner = "evil"
+                self.mechanic_mode = "ended"
             elif sum(self.completed_missions) >= 3:
-                self.assassination_time = True
+                self.mechanic_mode = "assassination"
             else:
                 self.current_turn = (self.current_turn + 1) % len(self.player_characters)
+                self.mechanic_mode = "proposal"
         
     def assassination(self, player_name, target):
-        if self.winner:
-            raise ValueError("This game is already over.")
-
-        if not self.assassination_time:
+        if not self.mechanic_mode == "assassination":
             raise ValueError("It is not time for assassination.")
 
         if self.player_characters[player_name] != "Assassin":
@@ -202,6 +178,7 @@ class AvalonGame:
             raise ValueError("Target is not part of the game.")
         
         if self.player_characters[target] == "Merlin":
-            self.winner = "Evil Team"
+            self.winner = "evil"
         else:
-            self.winner = "Good Team"
+            self.winner = "good"
+        self.mechanic_mode = "ended"
