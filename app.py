@@ -4,6 +4,7 @@ from flask_limiter.util import get_remote_address
 from helpers import *
 import re
 import sys
+from AvalonGame import AvalonGame
 
 app = Flask(__name__)
 limiter = Limiter(
@@ -35,7 +36,7 @@ def create_game():
     
     try:
         num_players = int(num_players)
-        if num_players not in [6, 7, 8, 9]:
+        if num_players not in [5, 6, 7, 8, 9, 10]:
             raise ValueError("Invalid number of players.")
     except ValueError:
         return redirect(url_for('home'))
