@@ -4,7 +4,7 @@
 
 **{{ mission_team }}** are going on a mission
 
-{{ action_string }}. Take your action below.
+{{ action_string }}. Take or revise your action below.
 
 <form action="/avalom/mission_action" method="get">
     <input type="hidden" name="game_id" value="{{ game_id }}">
