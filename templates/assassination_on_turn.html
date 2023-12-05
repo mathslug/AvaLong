@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Assassination</title>
+</head>
+<body>
+    <h1>Assassination Time</h1>
+
+    <p><strong>Game ID:</strong> {{ game_id }}</p>
+    <p>It is time to assassinate Merlin.</p>
+
+    <h2>Your Target</h2>
+    <form action="/avalom/assassination_selection" method="get">
+        {% for item in player_list %}
+            <label>
+                <input type="radio" name="selectedOption" value="{{ item }}">
+                {{ item }}
+            </label><br>
+        {% endfor %}
+
+        <input type="hidden" name="game_id" value="{{ game_id }}">
+        <input type="hidden" name="player_name" value="{{ player_name }}">
+        <input type="submit" value="Submit">
+    </form>
+
+    <h2>Your Info</h2>
+    <p>Your name is {{ player_name }}. Here's your game info:</p>
+    <p>{{ known_info }}</p>
+
+    <h2>Game State</h2>
+    <p>{{ game_state }}</p>
+
+    <h2>Game Parameters</h2>
+    <p>{{ game_params }}</p>
+
+    <h2>Game Log</h2>
+    <p>{{ game_log }}</p>
+</body>
+</html>

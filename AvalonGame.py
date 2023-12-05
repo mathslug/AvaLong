@@ -86,7 +86,7 @@ class AvalonGame:
     def get_player_known_info(self, player_name):
         # Check if the player is in the game
         if player_name not in self.player_characters:
-            raise ValueError(f"Player {player_name} not found in the game")
+            raise ValueError(f"Player not found in the game")
 
         character = self.player_characters[player_name]
         info = {'character': character}
@@ -136,7 +136,7 @@ class AvalonGame:
 
             # Check if the vote fails
             if true_votes <= len(self.player_characters) / 2:
-                self.log.append(f"rejected by {[k for (k, v) in votes.items() if not v]}")
+                self.log.append(f"rejected by {[k for (k, v) in self.votes.items() if not v]}")
                 self.consecutive_rejects += 1
                 self.proposed_team = []
                 self.votes = {}
@@ -148,7 +148,7 @@ class AvalonGame:
                     self.current_turn = (self.current_turn + 1) % len(self.player_characters)
                     self.mechanic_mode = "proposal"
             else:
-                self.log.append(f"approved by {[k for (k, v) in votes.items() if v]}")
+                self.log.append(f"approved by {[k for (k, v) in self.votes.items() if v]}")
                 self.mechanic_mode = "mission"
 
     def player_mission_act(self, player_name, succeed_mission):
@@ -182,7 +182,12 @@ class AvalonGame:
                 self.mechanic_mode = "ended"
                 self.log.append("Evil team wins via missions")
             elif sum(self.completed_missions) >= 3:
-                self.mechanic_mode = "assassination"
+                if "Assassin" in self.player_characters.values():
+                    self.mechanic_mode = "assassination" 
+                else:
+                    self.winner = "good"
+                    self.mechanic_mode = "ended"
+                    self.log.append("Good team wins")
             else:
                 self.current_turn = (self.current_turn + 1) % len(self.player_characters)
                 self.mechanic_mode = "proposal"
@@ -204,7 +209,3 @@ class AvalonGame:
             self.winner = "good"
             self.log.append("Good team wins")
         self.mechanic_mode = "ended"
-
-g = AvalonGame(["a", "b", "c", "d", "e"])
-print(g.get_game_params())
-print(g.get_game_state())
