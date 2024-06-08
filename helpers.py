@@ -14,3 +14,4 @@ def render_markdown_template(filesname_no_ext, replacements_dict={}):
     # Convert the modified Markdown to HTML
     html_content = markdown.markdown(md_string)
     return render_template('general_markdown' + '.html', content=html_content)
+
