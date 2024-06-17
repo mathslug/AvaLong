@@ -10,7 +10,7 @@ app = Flask(__name__)
 limiter = Limiter(
     app=app,
     key_func=get_remote_address,
-    default_limits=["200 per day", "50 per hour", "4 per second"],
+    default_limits=["2000 per day", "400 per hour", "8 per second"],
     # I should change the below if I care about performance or multiple nodes
     storage_uri="memory://" 
 )
