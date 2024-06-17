@@ -90,16 +90,17 @@ class AvalonGame:
 
         character = self.player_characters[player_name]
         info = {'character': character}
+        
+        evil_roles_noob = ["Morgana", "Mordred", "Assassin", "Minion"]
 
         # Providing information based on the character
         if character == "Merlin":
             info['known_players'] = [player for player, role in self.player_characters.items() if role in ["Morgana", "Assassin", "Oberon", "Minion"]]
         elif character == "Percival":
             info['known_players'] = [player for player, role in self.player_characters.items() if role in ["Merlin", "Morgana"]]
-        elif character in ["Morgana", "Mordred", "Assassin", "Minion"]:
-            evil_roles = ["Morgana", "Mordred", "Assassin", "Oberon", "Minion"]
-            evil_roles.remove(character)
-            info['known_players'] = [player for player, role in self.player_characters.items() if role in evil_roles]
+        elif character in evil_roles_noob:
+            evil_roles_noob.remove(character)
+            info['known_players'] = [player for player, role in self.player_characters.items() if role in evil_roles_noob]
 
         return info
     
