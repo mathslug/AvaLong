@@ -2,7 +2,7 @@
 
 This app is for playing long bacakground games of Avalon. Like, over multiple days. Collusion allowed.
 
-It's running live here: (https://mathslug.com/avalom/)[https://mathslug.com/avalom/]
+It's running live here: [https://mathslug.com/avalom/](https://mathslug.com/avalom/)
 
 ## How to run
 Log in, start tmux, `uwsgi --ini fcgi_conf_alt.ini`
