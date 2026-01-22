@@ -20,18 +20,32 @@ Key Features
 * uWSGI app with Flask front-end
 
 ## Setup
-1. Clone and Install
-git clone https://github.com/mathslug/avalom.git
-cd avalom
-pip install -r requirements.txt
-(a virtual environment is recommended.)
 
-2. Run (within Tmux for persistance)
-`uwsgi --ini fcgi_conf_alt.ini`
+This project uses [uv](https://github.com/astral-sh/uv) for Python package management and is pinned to Python 3.12.
+
+1. Clone and Install
+```bash
+git clone https://github.com/mathslug/AvaLong.git
+cd AvaLong
+uv venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+uv pip install -r requirements.txt
+```
+
+2. Run
+For development:
+```bash
+python app.py
+```
+
+For production (within Tmux for persistence):
+```bash
+uwsgi --ini fcgi_conf_alt.ini
+```
 
 ## Live Instance
 
-[https://avalong.mathslug.com/avalom/](https://avalong.mathslug.com/avalom/)
+[https://avalong.mathslug.com/avalom/](https://avalong.mathslug.com/ava1/)
 
 ## Future Directions
 
