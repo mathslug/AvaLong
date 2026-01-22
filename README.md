@@ -31,7 +31,7 @@ pip install -r requirements.txt
 
 ## Live Instance
 
-[https://mathslug.com/avalom](https://mathslug.com/avalom/)
+[https://avalong.mathslug.com/avalom/](https://avalong.mathslug.com/avalom/)
 
 ## Future Directions
 
