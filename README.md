@@ -28,7 +28,7 @@ This project uses [uv](https://github.com/astral-sh/uv) for Python package manag
 git clone https://github.com/mathslug/AvaLong.git
 cd AvaLong
 uv venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+source .venv/bin/activate
 uv pip install -r requirements.txt
 ```
 
