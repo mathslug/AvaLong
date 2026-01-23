@@ -45,7 +45,7 @@ uwsgi --ini fcgi_conf_alt.ini
 
 ## Live Instance
 
-[https://avalong.mathslug.com/avalom/](https://avalong.mathslug.com/ava1/)
+[https://avalong.mathslug.com/avalom/](https://avalong.mathslug.com/avalom/)
 
 ## Future Directions
 
