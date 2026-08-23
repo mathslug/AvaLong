@@ -1,0 +1,30 @@
+[Unit]
+Description=avalong — Avalon, played over days with friends
+Documentation=https://github.com/mathslug/AvaLong
+After=network-online.target
+Wants=network-online.target
+
+[Container]
+ContainerName=avalong
+Image=localhost/avalong:latest
+PublishPort=127.0.0.1:8001:8001
+
+# Unused today — AvaLong has no persistent state or secrets — kept for
+# consistency with the other apps here.
+Volume=%h/data/avalong:/data
+EnvironmentFile=%h/.config/avalong.env
+
+PodmanArgs=--memory=256m
+
+# Script, not an inline command: Quadlet truncates at the first nested quote.
+HealthCmd=python /app/healthcheck.py
+HealthInterval=30s
+HealthRetries=3
+HealthStartPeriod=15s
+
+[Service]
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target

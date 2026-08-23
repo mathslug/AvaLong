@@ -17,6 +17,11 @@ limiter = Limiter(
 
 games = {}
 
+@app.route('/healthz')
+@limiter.exempt
+def healthz():
+    return "ok", 200
+
 @app.route('/')
 def meta_home():
     return redirect(url_for('home'))

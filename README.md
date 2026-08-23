@@ -7,7 +7,7 @@ It’s designed so you and your friends can play over multiple days, each player
 
 AvaLong faithfully reproduces the logic and rules of Avalon in a web-based format. Players can create or join games directly from the browser, and the system manages all state transitions: proposals, voting, missions, and the final assassination phase.
 
-The interface is minimal but fully functional. It runs live on an OpenBSD VPS, but can easily be deployed elsewhere.
+The interface is minimal but fully functional. It runs as a rootless Podman container on a home Raspberry Pi server, reached through a Cloudflare Tunnel — no ports are open on the host, and TLS terminates at Cloudflare's edge, not on the Pi.
 
 Key Features
 
@@ -17,7 +17,7 @@ Key Features
 
 * Persistent, multi-game concurrent, management
 
-* uWSGI app with Flask front-end
+* gunicorn app with Flask front-end
 
 ## Setup
 
@@ -38,10 +38,7 @@ For development:
 python app.py
 ```
 
-For production (within Tmux for persistence):
-```bash
-uwsgi --ini fcgi_conf_alt.ini
-```
+For production, this repo is built as a container image (`Containerfile`) and run under Podman + systemd Quadlet (`deploy/avalong.container`), driven by `deploy-app.sh` in [mathslug/server_setup](https://github.com/mathslug/server_setup). There is no manual production start step: pushing to `main` is picked up and redeployed automatically within about 15 minutes. `healthcheck.py` backs the container's health check.
 
 ## Live Instance
 
