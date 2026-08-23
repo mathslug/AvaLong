@@ -6,7 +6,7 @@
 
 {{ vote_string }}. Cast or re-cast your vote below.
 
-<form action="/avalom/voting_result" method="get">
+<form action="/voting_result" method="get">
     <input type="hidden" name="game_id" value="{{ game_id }}">
     <input type="hidden" name="player_name" value="{{ player_name }}">
 

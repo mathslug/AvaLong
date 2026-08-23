@@ -23,14 +23,10 @@ def healthz():
     return "ok", 200
 
 @app.route('/')
-def meta_home():
-    return redirect(url_for('home'))
-
-@app.route('/avalom/')
 def home():
     return render_markdown_template('home')
 
-@app.route('/avalom/create_game')
+@app.route('/create_game')
 def create_game():
     username = request.args.get('username', '').strip()
     num_players = request.args.get('num_players', '').strip()
@@ -58,7 +54,7 @@ def create_game():
     # Redirect to the game page
     return redirect(url_for('game', game_id=game_id, player_name=username))
 
-@app.route('/avalom/join_game')
+@app.route('/join_game')
 def join_game():
     username = request.args.get('username', '').strip()
     game_id = request.args.get('game_id', '').strip()
@@ -87,7 +83,7 @@ def join_game():
     else:
         return redirect(url_for('game', game_id=game_id, player_name=username))
 
-@app.route('/avalom/game/<int:game_id>/<player_name>')
+@app.route('/game/<int:game_id>/<player_name>')
 def game(game_id, player_name):
     game_info = games.get(game_id)
     if not game_info:
@@ -208,7 +204,7 @@ def game(game_id, player_name):
             "game_log": ' ~ '.join(this_game.log)
         })
 
-@app.route('/avalom/proposed_team/')
+@app.route('/proposed_team/')
 def proposed_team():
     selected_members = request.args.getlist('selectedItems')
     game_id = request.args.get('game_id')
@@ -221,7 +217,7 @@ def proposed_team():
     
     return redirect(url_for("game", game_id=game_id, player_name=player_name))
 
-@app.route('/avalom/voting_result')
+@app.route('/voting_result')
 def voting_result():
     game_id = request.args.get('game_id')
     player_name = request.args.get('player_name')
@@ -230,7 +226,7 @@ def voting_result():
     this_game.player_vote(player_name, vote)
     return redirect(url_for("game", game_id=game_id, player_name=player_name))
 
-@app.route('/avalom/mission_action')
+@app.route('/mission_action')
 def mission_action():
     game_id = request.args.get('game_id')
     player_name = request.args.get('player_name')
@@ -242,7 +238,7 @@ def mission_action():
         pass
     return redirect(url_for("game", game_id=game_id, player_name=player_name))
 
-@app.route('/avalom/assassination_selection')
+@app.route('/assassination_selection')
 def assassination_selection():
     game_id = request.args.get('game_id')
     player_name = request.args.get('player_name')

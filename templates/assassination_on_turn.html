@@ -10,7 +10,7 @@
     <p>It is time to assassinate Merlin.</p>
 
     <h2>Your Target</h2>
-    <form action="/avalom/assassination_selection" method="get">
+    <form action="/assassination_selection" method="get">
         {% for item in player_list %}
             <label>
                 <input type="radio" name="selectedOption" value="{{ item }}">
@@ -38,7 +38,7 @@
 
     <hr>
     <p>
-        <a href="/avalom/">app home</a> |
+        <a href="/">app home</a> |
         <a href="https://mathslug.com">mathslug.com</a>
     </p>
 </body>

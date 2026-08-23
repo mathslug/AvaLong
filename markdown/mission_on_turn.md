@@ -6,7 +6,7 @@
 
 {{ action_string }}. Take or revise your action below.
 
-<form action="/avalom/mission_action" method="get">
+<form action="/mission_action" method="get">
     <input type="hidden" name="game_id" value="{{ game_id }}">
     <input type="hidden" name="player_name" value="{{ player_name }}">
 

@@ -42,7 +42,7 @@ For production, this repo is built as a container image (`Containerfile`) and ru
 
 ## Live Instance
 
-[https://avalong.mathslug.com/avalom/](https://avalong.mathslug.com/avalom/)
+[https://avalong.mathslug.com/](https://avalong.mathslug.com/)
 
 ## Future Directions
 
