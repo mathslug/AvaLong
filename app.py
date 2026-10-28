@@ -7,9 +7,17 @@ import sys
 from AvalonGame import AvalonGame
 
 app = Flask(__name__)
+
+# Behind the Cloudflare tunnel every request reaches gunicorn from 127.0.0.1,
+# so remote_addr alone would put all players in one shared bucket. Cloudflare's
+# edge sets CF-Connecting-IP to the real client and clients can't override it;
+# the port is loopback-only, so production traffic always carries it.
+def client_ip():
+    return request.headers.get('CF-Connecting-IP') or get_remote_address()
+
 limiter = Limiter(
     app=app,
-    key_func=get_remote_address,
+    key_func=client_ip,
     default_limits=["2000 per day", "400 per hour", "8 per second"],
     # I should change the below if I care about performance or multiple nodes
     storage_uri="memory://" 
@@ -213,8 +221,11 @@ def proposed_team():
     mission_size = this_game.mission_participants[len(this_game.completed_missions)]
 
     if len(selected_members) == mission_size:
-        this_game.propose_team(player_name, selected_members)
-    
+        try:
+            this_game.propose_team(player_name, selected_members)
+        except ValueError:
+            pass
+
     return redirect(url_for("game", game_id=game_id, player_name=player_name))
 
 @app.route('/voting_result')
@@ -223,7 +234,10 @@ def voting_result():
     player_name = request.args.get('player_name')
     vote = request.args.get('vote') is not None and request.args.get('vote').lower() == "yes"
     this_game = games.get(int(game_id)).get("game_object")
-    this_game.player_vote(player_name, vote)
+    try:
+        this_game.player_vote(player_name, vote)
+    except ValueError:
+        pass
     return redirect(url_for("game", game_id=game_id, player_name=player_name))
 
 @app.route('/mission_action')
