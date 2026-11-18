@@ -117,6 +117,9 @@ class AvalonGame:
         if not all(player in self.turn_order for player in team):
             raise ValueError("All players in the proposed team must be part of the game.")
 
+        if len(set(team)) != len(team):
+            raise ValueError("Each player can only be on the team once.")
+
         self.proposed_team = team
         self.mechanic_mode = "voting"
         self.log.append(f"{player_name} proposed {team}")
